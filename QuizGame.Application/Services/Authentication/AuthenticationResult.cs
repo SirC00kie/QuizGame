@@ -1,10 +1,9 @@
 ﻿using System;
+using QuizGame.Domain.Entities;
 
 namespace QuizGame.Application.Services.Authentication
 {
     public record AuthenticationResult(
-        Guid Id,
-        string Name,
-        string Email,
+        User User,
         string Token);
 }

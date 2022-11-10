@@ -24,9 +24,9 @@ namespace QuizGame.Api.Controllers
                 request.Password);
 
             var response = new AuthenticationResponse(
-                authResult.Id,
-                authResult.Name,
-                authResult.Email,
+                authResult.User.Id,
+                authResult.User.Name,
+                authResult.User.Email,
                 authResult.Token);
             
             return Ok(response);
@@ -40,9 +40,9 @@ namespace QuizGame.Api.Controllers
                 request.Password);
 
             var response = new AuthenticationResponse(
-                authResult.Id,
-                authResult.Name,
-                authResult.Email,
+                authResult.User.Id,
+                authResult.User.Name,
+                authResult.User.Email,
                 authResult.Token);
             
             return Ok(response);

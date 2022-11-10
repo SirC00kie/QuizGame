@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using QuizGame.Application.Common.Interfaces.Authentication;
 using QuizGame.Application.Common.Interfaces.Services;
+using QuizGame.Domain.Entities;
 
 namespace QuizGame.Infrastructure.Authentication
 {
@@ -20,7 +21,7 @@ namespace QuizGame.Infrastructure.Authentication
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(Guid userId, string name)
+        public string GenerateToken(User user)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(
@@ -29,8 +30,8 @@ namespace QuizGame.Infrastructure.Authentication
             
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, name),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
