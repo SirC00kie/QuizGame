@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ErrorOr;
 using QuizGame.Application.Common.Interfaces.Authentication;
 using QuizGame.Application.Common.Interfaces.Persistence;
 using QuizGame.Domain.Entities;
+using QuizGame.Domain.Common.Errors;
 
 namespace QuizGame.Application.Services.Authentication
 {
@@ -16,12 +17,12 @@ namespace QuizGame.Application.Services.Authentication
             _userRepository = userRepository;
         }
 
-        public AuthenticationResult Register(string name, string email, string password)
+        public ErrorOr<AuthenticationResult> Register(string name, string email, string password)
         {
             //1. Валидация, что юзера еще нет
             if (_userRepository.GetUserByEmail(email) is not null)
             {
-                throw new Exception("User with given email alredy exists");
+                return Errors.User.DuplicateEmail;
             }
             
             //2. Создать юзера (генерация уникального ид) и добавление в БД
@@ -42,18 +43,18 @@ namespace QuizGame.Application.Services.Authentication
         }
         
 
-        public AuthenticationResult Login(string email, string password)
+        public ErrorOr<AuthenticationResult> Login(string email, string password)
         {
             //1. Валидация, что юзер существует
             if (_userRepository.GetUserByEmail(email) is not User user)
             {
-                throw new Exception("User with given email does not exist");
+                return Errors.Authentication.InvalidCredentials;
             }
             
             //2. Валидация, что пароль корректный
             if (user.Password != password)
             {
-                throw new Exception("Invalid password");
+                return Errors.Authentication.InvalidCredentials;
             }
             
             //3. Создать JWT Token

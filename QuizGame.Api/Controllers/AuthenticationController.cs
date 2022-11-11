@@ -1,51 +1,60 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ErrorOr;
+using Microsoft.AspNetCore.Mvc;
 using QuizGame.Application.Services.Authentication;
 using QuizGame.Contracts.Authentication;
+using QuizGame.Domain.Common.Errors;
 
-namespace QuizGame.Api.Controllers
+namespace QuizGame.Api.Controllers;
+
+[Route("auth")]
+public class AuthenticationController : ApiController
 {
-    [ApiController]
-    [Route("auth")]
-    public class AuthenticationController : ControllerBase
+    private readonly IAuthenticationService _authenticationService;
+
+    public AuthenticationController(IAuthenticationService authenticationService)
     {
-        private readonly IAuthenticationService _authenticationService;
+        _authenticationService = authenticationService;
+    }
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+    [HttpPost("register")]
+    public IActionResult Register(RegisterRequest request)
+    {
+        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(
+            request.Name,
+            request.Email,
+            request.Password);
+        
+        return authResult.Match(
+            authResult => Ok(MapAuthResult(authResult)),
+            errors => Problem(errors));
+    }
+
+    [HttpPost("login")]
+    public IActionResult Login(LoginRequest request)
+    {
+        var authResult = _authenticationService.Login(
+            request.Email,
+            request.Password);
+
+        if (authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
         {
-            _authenticationService = authenticationService;
+            return Problem(
+                statusCode: StatusCodes.Status401Unauthorized,
+                title: authResult.FirstError.Description);
         }
 
-        [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
-        {
-            var authResult = _authenticationService.Register(
-                request.Name,
-                request.Email,
-                request.Password);
+        return authResult.Match(
+            authResult => Ok(MapAuthResult(authResult)),
+            errors => Problem(errors));
+    }
 
-            var response = new AuthenticationResponse(
-                authResult.User.Id,
-                authResult.User.Name,
-                authResult.User.Email,
-                authResult.Token);
-            
-            return Ok(response);
-        }
-
-        [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
-        {
-            var authResult = _authenticationService.Login(
-                request.Email,
-                request.Password);
-
-            var response = new AuthenticationResponse(
-                authResult.User.Id,
-                authResult.User.Name,
-                authResult.User.Email,
-                authResult.Token);
-            
-            return Ok(response);
-        }
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
+    {
+        var response = new AuthenticationResponse(
+            authResult.User.Id,
+            authResult.User.Name,
+            authResult.User.Email,
+            authResult.Token);
+        return response;
     }
 }
