@@ -1,6 +1,9 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using QuizGame.Application.Services.Authentication;
+using QuizGame.Application.Services.Authentication.Commands;
+using QuizGame.Application.Services.Authentication.Common;
+using QuizGame.Application.Services.Authentication.Queries;
 using QuizGame.Contracts.Authentication;
 using QuizGame.Domain.Common.Errors;
 
@@ -9,17 +12,20 @@ namespace QuizGame.Api.Controllers;
 [Route("auth")]
 public class AuthenticationController : ApiController
 {
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IAuthenticationCommandService _authenticationCommandService;
+    private readonly IAuthenticationQueryService _authenticationQueryService;
 
-    public AuthenticationController(IAuthenticationService authenticationService)
+    public AuthenticationController(IAuthenticationCommandService authenticationCommandService,
+        IAuthenticationQueryService authenticationQueryService)
     {
-        _authenticationService = authenticationService;
+        _authenticationCommandService = authenticationCommandService;
+        _authenticationQueryService = authenticationQueryService;
     }
 
     [HttpPost("register")]
     public IActionResult Register(RegisterRequest request)
     {
-        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(
+        ErrorOr<AuthenticationResult> authResult = _authenticationCommandService.Register(
             request.Name,
             request.Email,
             request.Password);
@@ -32,7 +38,7 @@ public class AuthenticationController : ApiController
     [HttpPost("login")]
     public IActionResult Login(LoginRequest request)
     {
-        var authResult = _authenticationService.Login(
+        var authResult = _authenticationQueryService.Login(
             request.Email,
             request.Password);
 
