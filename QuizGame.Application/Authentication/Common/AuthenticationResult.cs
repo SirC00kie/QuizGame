@@ -1,6 +1,6 @@
 ﻿using QuizGame.Domain.Entities;
 
-namespace QuizGame.Application.Services.Authentication.Common
+namespace QuizGame.Application.Authentication.Common
 {
     public record AuthenticationResult(
         User User,

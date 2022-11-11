@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using QuizGame.Application.Services.Authentication;
-using QuizGame.Application.Services.Authentication.Commands;
-using QuizGame.Application.Services.Authentication.Queries;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace QuizGame.Application
 {
@@ -9,8 +7,7 @@ namespace QuizGame.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationCommandService, AuthenticationCommandService>();
-            services.AddScoped<IAuthenticationQueryService, AuthenticationQueryService>();
+            services.AddMediatR(typeof(DependencyInjections).Assembly);
             return services;
         }
     }
