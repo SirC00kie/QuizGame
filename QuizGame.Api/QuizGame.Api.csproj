@@ -10,5 +10,10 @@
       <ProjectReference Include="..\QuizGame.Application\QuizGame.Application.csproj" />
       <ProjectReference Include="..\QuizGame.Contracts\QuizGame.Contracts.csproj" />
       <ProjectReference Include="..\QuizGame.Infrastructure\QuizGame.Infrastructure.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="7.4.0-pre03" />
+      <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
     </ItemGroup> 
 </Project>

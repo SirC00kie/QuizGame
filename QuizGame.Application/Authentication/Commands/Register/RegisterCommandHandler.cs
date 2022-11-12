@@ -21,6 +21,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
+        await Task.CompletedTask;
         //1. Валидация, что юзера еще нет
         if (_userRepository.GetUserByEmail(command.Email) is not null)
         {

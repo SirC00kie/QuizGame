@@ -1,17 +1,13 @@
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using QuizGame.Api.Common.Errors;
+using QuizGame.Api;
 using QuizGame.Application;
 using QuizGame.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
+        .AddPresentation()
         .AddApplication()
-        .AddInfrastructure(builder.Configuration); 
-    
-    builder.Services.AddControllers();
-
-    builder.Services.AddSingleton<ProblemDetailsFactory, QuizGameProblemDetailsFactory>();
+        .AddInfrastructure(builder.Configuration);
 }
 
 var app = builder.Build();
