@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizGame.Application.Authentication.Commands.Register;
 using QuizGame.Application.Authentication.Common;
@@ -11,6 +12,7 @@ using QuizGame.Domain.Common.Errors;
 namespace QuizGame.Api.Controllers;
 
 [Route("auth")]
+[AllowAnonymous]
 public class AuthenticationController : ApiController
 {
     private readonly IMapper _mapper;

@@ -15,5 +15,6 @@
     <ItemGroup>
       <PackageReference Include="Mapster" Version="7.4.0-pre03" />
       <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
     </ItemGroup> 
 </Project>
